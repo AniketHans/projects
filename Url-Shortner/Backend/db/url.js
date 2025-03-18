@@ -26,4 +26,13 @@ async function getandUpadteUrlRecordFromShortId({ short_id }) {
   }
 }
 
-export { createURL, getandUpadteUrlRecordFromShortId };
+async function getAllUrlRecords() {
+  try {
+    const allUrlRecords = await urlSchema.findAll({});
+    return allUrlRecords;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export { createURL, getandUpadteUrlRecordFromShortId, getAllUrlRecords };

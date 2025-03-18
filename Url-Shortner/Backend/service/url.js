@@ -1,5 +1,9 @@
 import { nanoid } from "nanoid";
-import { createURL, getandUpadteUrlRecordFromShortId } from "../db/url.js";
+import {
+  createURL,
+  getAllUrlRecords,
+  getandUpadteUrlRecordFromShortId,
+} from "../db/url.js";
 
 async function generateShortUrl(url) {
   try {
@@ -22,4 +26,13 @@ async function getRedirectUrlFromShortId(short_id) {
   }
 }
 
-export { generateShortUrl, getRedirectUrlFromShortId };
+async function getAllUrls() {
+  try {
+    const allUrls = await getAllUrlRecords();
+    return allUrls;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export { generateShortUrl, getRedirectUrlFromShortId, getAllUrls };
