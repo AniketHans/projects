@@ -7,7 +7,9 @@ async function handleGenerateShortUrl(req, res) {
       return res.status(400).json({ message: "url missing from request body" });
     }
     const shortenedUrl = await generateShortUrl(url);
-    return res.status(200).json({ message: shortenedUrl });
+    console.log(shortenedUrl);
+    req.session.url = shortenedUrl;
+    return res.redirect("/");
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });

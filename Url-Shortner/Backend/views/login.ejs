@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  </head>
+  <body>
+    <% if (locals.server_error) { %>
+    <h3 style="color: red">Internal server error</h3>
+    <% } %>
+    <form method="POST" action="/user/login">
+      <% if (locals.invalid_creds) { %>
+      <h3>Invalid email and password</h3>
+      <% } %>
+      <div>
+        <div style="margin: 10px">
+          <label>Enter email:</label>
+          <input type="email" name="email_id" />
+        </div>
+        <div style="margin: 10px">
+          <label>Enter password:</label>
+          <input type="password" name="password" />
+        </div>
+      </div>
+      <div style="margin: 10px">
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  </body>
+</html>

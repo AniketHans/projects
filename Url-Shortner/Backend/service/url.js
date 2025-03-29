@@ -9,7 +9,7 @@ async function generateShortUrl(url) {
   try {
     const short_id = nanoid(8);
     const newUrlRecord = await createURL({ short_id, redirect_url: url });
-    return `www.short-url.com/${short_id}`;
+    return `http://localhost:3006/url/${short_id}`;
   } catch (err) {
     console.log(err);
     throw err;

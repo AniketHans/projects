@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>Welcome to Url Shortner</title>
+  </head>
+  <body>
+    <h1>Welcome to URL shortner service</h1>
+    <% if (!locals.username) { %>
+    <button id="signup">Signup</button>
+    <button id="login">Login</button>
+    <% } %> <% if (locals.username) { %>
+    <div>
+      <h3>Hi!!!! <%= locals.username%></h3>
+      <form action="/logout" method="GET"><button>Logout</button></form>
+    </div>
+    <div>
+      <form method="POST" action="/url">
+        <label>Enter your original url:</label>
+        <input type="text" name="url" placeholder="https://example.com" />
+        <br />
+        <button type="submit">Generate</button>
+      </form>
+    </div>
+    <% if (locals.url) { %>
+    <input style="width: 300px" type="text" value="<%= url %>" readonly % />
+    <% } %> <% if (locals.urls && locals.urls.length>0) { %>
+    <div>
+      <table>
+        <thead>
+          <th>S.no</th>
+          <th>Short Id</th>
+          <th>Redirect</th>
+          <th>Click</th>
+        </thead>
+        <tbody>
+          <% urls.forEach((url,index) => { %>
+          <tr>
+            <td><%= index+1 %></td>
+            <td><%= url.short_id %></td>
+            <td><%= url.redirect_url %></td>
+            <td><%= url.visit_count %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %> <% } %>
+  </body>
+
+  <script>
+    document.getElementById("signup").addEventListener("click", function () {
+      const currentUrl = window.location.href;
+      const newSlug = "signup";
+      const newUrl = currentUrl.endsWith("/")
+        ? currentUrl + newSlug
+        : currentUrl + "/" + newSlug;
+      window.location.href = newUrl;
+    });
+
+    document.getElementById("login").addEventListener("click", function () {
+      const currentUrl = window.location.href;
+      const newSlug = "login";
+      const newUrl = currentUrl.endsWith("/")
+        ? currentUrl + newSlug
+        : currentUrl + "/" + newSlug;
+      window.location.href = newUrl;
+    });
+  </script>
+</html>
