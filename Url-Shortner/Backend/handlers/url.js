@@ -1,4 +1,5 @@
-import { generateShortUrl } from "../service/url.js";
+import { generateShortUrl, getAllUserUrls } from "../service/url.js";
+import { getUser } from "../utils/auth.js";
 
 async function handleGenerateShortUrl(req, res) {
   try {
@@ -6,7 +7,8 @@ async function handleGenerateShortUrl(req, res) {
     if (url == undefined) {
       return res.status(400).json({ message: "url missing from request body" });
     }
-    const shortenedUrl = await generateShortUrl(url);
+    const user_id = req.user.id;
+    const shortenedUrl = await generateShortUrl(url, user_id);
     console.log(shortenedUrl);
     req.session.url = shortenedUrl;
     return res.redirect("/");
@@ -16,4 +18,18 @@ async function handleGenerateShortUrl(req, res) {
   }
 }
 
-export { handleGenerateShortUrl };
+async function handleGetUrlsByUser(req, res) {
+  try {
+    const user = req.user;
+    if (!user) {
+      return { invalid_req: true, error: false, urls: [] };
+    }
+    const allUrls = await getAllUserUrls(user.id);
+    return { invalid_req: false, error: false, urls: allUrls };
+  } catch (err) {
+    console.log(err);
+    return { invalid_req: false, error: true, urls: [] };
+  }
+}
+
+export { handleGenerateShortUrl, handleGetUrlsByUser };

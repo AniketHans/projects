@@ -1,5 +1,4 @@
 import { createUser, findUserWithEmailAndPassword } from "../db/user.js";
-
 async function signup({ user_name, email_id, password }) {
   try {
     const userData = await createUser({ user_name, email_id, password });

@@ -1,10 +1,11 @@
 import { urlSchema } from "../models/url.js";
-async function createURL({ short_id, redirect_url }) {
+async function createURL({ short_id, redirect_url, user_id }) {
   try {
     const urlRecord = await urlSchema.create({
       short_id,
       redirect_url,
       visit_count: 0,
+      created_by: user_id,
     });
     return urlRecord;
   } catch (err) {
@@ -35,4 +36,19 @@ async function getAllUrlRecords() {
   }
 }
 
-export { createURL, getandUpadteUrlRecordFromShortId, getAllUrlRecords };
+async function getAllUrlsByUserId(user_id) {
+  try {
+    const userUrls = await urlSchema.findAll({
+      where: { created_by: user_id },
+    });
+    return userUrls;
+  } catch (err) {
+    throw err;
+  }
+}
+export {
+  createURL,
+  getandUpadteUrlRecordFromShortId,
+  getAllUrlRecords,
+  getAllUrlsByUserId,
+};

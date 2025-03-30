@@ -47,22 +47,28 @@
   </body>
 
   <script>
-    document.getElementById("signup").addEventListener("click", function () {
-      const currentUrl = window.location.href;
-      const newSlug = "signup";
-      const newUrl = currentUrl.endsWith("/")
-        ? currentUrl + newSlug
-        : currentUrl + "/" + newSlug;
-      window.location.href = newUrl;
-    });
+    const signupBtn = document.getElementById("signup");
+    if (signupBtn) {
+      signupBtn.addEventListener("click", function () {
+        const currentUrl = window.location.href;
+        const newSlug = "signup";
+        const newUrl = currentUrl.endsWith("/")
+          ? currentUrl + newSlug
+          : currentUrl + "/" + newSlug;
+        window.location.href = newUrl;
+      });
+    }
 
-    document.getElementById("login").addEventListener("click", function () {
-      const currentUrl = window.location.href;
-      const newSlug = "login";
-      const newUrl = currentUrl.endsWith("/")
-        ? currentUrl + newSlug
-        : currentUrl + "/" + newSlug;
-      window.location.href = newUrl;
-    });
+    const loginBtn = document.getElementById("login");
+    if (loginBtn) {
+      loginBtn.addEventListener("click", function () {
+        const currentUrl = window.location.href;
+        const newSlug = "login";
+        const newUrl = currentUrl.endsWith("/")
+          ? currentUrl + newSlug
+          : currentUrl + "/" + newSlug;
+        window.location.href = newUrl;
+      });
+    }
   </script>
 </html>

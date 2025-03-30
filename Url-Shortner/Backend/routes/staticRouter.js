@@ -1,18 +1,24 @@
 // This file is created to club all the paths which are going to render the UI using the views
 
 import express from "express";
-import { getAllUrls } from "../service/url.js";
+import { getAllUrls, getAllUserUrls } from "../service/url.js";
+import {
+  handleGenerateShortUrl,
+  handleGetUrlsByUser,
+} from "../handlers/url.js";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   const username = req.session?.username;
   const url = req.session?.url;
-  const allUrls = await getAllUrls();
+  const { invalid_req, error, urls } = await handleGetUrlsByUser(req, res);
   return res.render("home", {
     url: url,
-    urls: allUrls,
+    urls: urls,
     username,
+    invalid_req,
+    error,
   });
 });
 

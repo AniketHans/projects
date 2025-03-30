@@ -1,5 +1,6 @@
 import sequelize from "./index.js";
 import { DataTypes } from "sequelize";
+import { userSchema } from "./user.js";
 
 const urlSchema = sequelize.define(
   "urls",
@@ -19,6 +20,16 @@ const urlSchema = sequelize.define(
       allowNull: false,
     },
     visit_count: { type: DataTypes.BIGINT, allowNull: false, defaultValue: 0 },
+    created_by: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: userSchema,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   },
   {
     timestamps: true,
