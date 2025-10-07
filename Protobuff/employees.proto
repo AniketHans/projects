@@ -1,0 +1,22 @@
+// Specify the version of the protobuf you wanted to use
+syntax = "proto3";
+
+// Each object in proto file is refered to as message
+// Structure of the employee object that will be shared by the server when client asks for employee data
+// Each property here will be having the type defined first and then the property name
+// We provide numbers to each property. These numbers are also called as Serialization sequence. 
+// With this unique number to the property, we define the property's sequence number in the response. 
+// With this protobuf maintains the compatibility, when the file is upgraded
+message Employee {
+    int32 id = 1; 
+    string name = 2;
+    float salary = 3;
+}
+
+
+// Here, we have defined the Employees object which has the employees property which is an array of Employee objects
+// repeated is used to mention the type as array
+message Employees{
+    repeated Employee employees = 1;
+}
+
