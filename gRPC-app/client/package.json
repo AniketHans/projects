@@ -1,5 +1,5 @@
 {
-  "name": "todo-service",
+  "name": "client",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,5 +8,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.0",
+    "@grpc/proto-loader": "^0.8.0"
+  }
 }
