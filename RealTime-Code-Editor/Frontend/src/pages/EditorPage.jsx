@@ -18,7 +18,7 @@ function EditorPage() {
   const location = useLocation(); // to get the variables get from navigate(), we set a `state` object in Home.jsx
   const navigate = useNavigate();
   const params = useParams(); // to get params from the url, to fetch roomId from the URL
-  const [clients, setClientsList] = useState([]);
+  const [clients, setClients] = useState([]);
   if (!location.state) {
     return <Navigate to="/" />;
   }
@@ -46,11 +46,27 @@ function EditorPage() {
           if (username != location.state.username) {
             toast.success(`${username} has joined the room`);
           }
-          setClientsList(clientList);
+          setClients(clientList);
         }
       );
+
+      // Listening for disconnected users
+      socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+        toast.success(`${username} left the room`);
+        //removing the user from clients list
+        setClients((prev) => prev.filter((val) => val.socketId != socketId));
+      });
     };
     init();
+
+    //If we return a function from useEffect then the function is called a cleaning function. It will be called after a component is unmounted and useEffect returns
+    return () => {
+      // We need to clean the listeners after the browser/tab is close otherwise it will lead to memory leaks
+      // unsubscribing from events
+      socketRef.current.off(ACTIONS.JOINED);
+      socketRef.current.off(ACTIONS.DISCONNECTED);
+      socketRef.current.disconnect();
+    };
   }, []);
 
   return (
@@ -71,7 +87,7 @@ function EditorPage() {
         <button className="btn leaveBtn ">Leave</button>
       </div>
       <div className="editorWrap">
-        <Editor />
+        <Editor socketRef={socketRef} roomId={params.roomId} />
       </div>
     </div>
   );

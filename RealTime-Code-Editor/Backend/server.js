@@ -45,6 +45,30 @@ io.on("connection", (socket) => {
       });
     });
   });
+
+  //Listening to code change event
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
+    //emitting the changes to all the sockets in the room except me
+    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
+  });
+
+  // disconnecting is an event which is triggered before the socket is fully disconnected
+  socket.on("disconnecting", () => {
+    //fetch all the rooms in which the user, with socket.id, is joined
+    const rooms = [...socket.rooms]; // Converting the socket.rooms map into array
+    console.log(rooms);
+    rooms.forEach((roomId) => {
+      // notifying all the sockets present in the room with roomId that a user socket is disconnected
+      socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+        socketId: socket.id,
+        username: userSocketMap[socket.id],
+      });
+    });
+
+    //delete the user from the userSocketMap after the disconnection
+    delete userSocketMap[socket.id];
+    socket.leave(); // officially socket leaves from the socket.io
+  });
 });
 
 server.listen(5000, () => {
