@@ -26,7 +26,7 @@ function getAllConnectedClients(roomId) {
 
 // socket listener
 io.on("connection", (socket) => {
-  console.log("Socket connected", socket.id);
+  // console.log("Socket connected", socket.id);
 
   // Listening to join action from the socket io client
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
   socket.on("disconnecting", () => {
     //fetch all the rooms in which the user, with socket.id, is joined
     const rooms = [...socket.rooms]; // Converting the socket.rooms map into array
-    console.log(rooms);
+    // console.log(rooms);
     rooms.forEach((roomId) => {
       // notifying all the sockets present in the room with roomId that a user socket is disconnected
       socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
