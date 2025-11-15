@@ -52,6 +52,10 @@ io.on("connection", (socket) => {
     socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
   });
 
+  socket.on(ACTIONS.SYNC_CODE, ({ code, socketId }) => {
+    io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
+  });
+
   // disconnecting is an event which is triggered before the socket is fully disconnected
   socket.on("disconnecting", () => {
     //fetch all the rooms in which the user, with socket.id, is joined

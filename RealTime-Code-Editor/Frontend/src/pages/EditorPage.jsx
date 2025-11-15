@@ -15,6 +15,7 @@ function EditorPage() {
   // When we want something to be us on multiple renders and the component does not rerendered on change of its value, we use
   // useRef
   const socketRef = useRef(null);
+  const codeRef = useRef(null); //For getting the reference of the code from the Editor component
   const location = useLocation(); // to get the variables get from navigate(), we set a `state` object in Home.jsx
   const navigate = useNavigate();
   const params = useParams(); // to get params from the url, to fetch roomId from the URL
@@ -34,12 +35,14 @@ function EditorPage() {
         toast.error("Socket Connection failed, try again later");
         navigate("/");
       }
+
       socketRef.current.emit(ACTIONS.JOIN, {
         roomId: params.roomId,
         username: location.state?.username,
       });
 
       //Listening for joined event from server
+      // It is recieved when someone new joins the room to the ones already present in it
       socketRef.current.on(
         ACTIONS.JOINED,
         ({ clientList, username, socketId }) => {
@@ -47,6 +50,12 @@ function EditorPage() {
             toast.success(`${username} has joined the room`);
           }
           setClients(clientList);
+          // As soon a someone joins the room, we get its socketid, username.
+          // We, who are perviously present in the room, will emit code sync event with our code and targetSocketID who joined recently
+          socketRef.current.emit(ACTIONS.SYNC_CODE, {
+            code: codeRef.current,
+            socketId,
+          });
         }
       );
 
@@ -69,6 +78,20 @@ function EditorPage() {
     };
   }, []);
 
+  const copyRoomId = async () => {
+    // we will be using browser apis so we must use try catch
+    try {
+      await navigator.clipboard.writeText(params.roomId);
+      toast.success("Room Id copied to your clipboard");
+    } catch (err) {
+      toast.error("Could not copy roomId");
+      console.log(err);
+    }
+  };
+
+  const leaveRoom = () => {
+    navigate("/");
+  };
   return (
     <div className="mainWrap">
       <div className="aside">
@@ -83,11 +106,21 @@ function EditorPage() {
             ))}
           </div>
         </div>
-        <button className="btn copyBtn">Copy Room ID</button>
-        <button className="btn leaveBtn ">Leave</button>
+        <button className="btn copyBtn" onClick={copyRoomId}>
+          Copy Room ID
+        </button>
+        <button className="btn leaveBtn" onClick={leaveRoom}>
+          Leave
+        </button>
       </div>
       <div className="editorWrap">
-        <Editor socketRef={socketRef} roomId={params.roomId} />
+        <Editor
+          socketRef={socketRef}
+          roomId={params.roomId}
+          onCodeChange={(code) => {
+            codeRef.current = code;
+          }}
+        />
       </div>
     </div>
   );

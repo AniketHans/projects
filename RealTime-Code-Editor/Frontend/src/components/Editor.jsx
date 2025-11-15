@@ -5,11 +5,12 @@ import { html } from "@codemirror/lang-html";
 import { python } from "@codemirror/lang-python";
 import { Transaction } from "@codemirror/state";
 import { ACTIONS } from "../actions";
-const Editor = ({ socketRef, roomId }) => {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const editorRef = useRef(null);
   const [code, setCode] = useState("Start coding here...");
   const codeChange = (value, viewUpdate) => {
     setCode(value);
+    onCodeChange(value);
     socketRef.current.emit(ACTIONS.CODE_CHANGE, {
       roomId,
       code: value,
@@ -24,13 +25,6 @@ const Editor = ({ socketRef, roomId }) => {
     // }
   };
 
-  useEffect(() => {
-    if (!socketRef.current) return;
-    socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-      roomId,
-      code,
-    });
-  }, [socketRef.current, CodeMirror]);
   useEffect(() => {
     if (!socketRef.current) return;
     socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
